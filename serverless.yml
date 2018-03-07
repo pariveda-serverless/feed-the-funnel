@@ -12,6 +12,8 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: ${opt:stage, env:STAGE}
+  environment:
+    ACTIVITIES_TABLE: { Ref: ActivitiesTable }
   # NOTE: Codebuild passes the lambda role from the security stack to the serverless deploy command in the live CI/CD pipeline
   role: ${file(./rolearn.txt)}
   region: ${env:AWS_REGION}
@@ -28,16 +30,29 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
+
+  postMessage:
     environment:
       SECRETS_BUCKET: ${file(./s3.txt)}
       SECURITY_COMMIT_HASH: ${self:custom.securityHash}
       APP_COMMIT_HASH: ${self:custom.appHash}
-    handler: index.hello
+    handler: postMessage.handler
     events:
       - http:
-          path: hello/world
-          method: get
+          path: activities
+          method: post
+          cors: true
+
+#  hello:
+#    environment:
+#      SECRETS_BUCKET: ${file(./s3.txt)}
+#      SECURITY_COMMIT_HASH: ${self:custom.securityHash}
+#      APP_COMMIT_HASH: ${self:custom.appHash}
+#    handler: index.hello
+#    events:
+#      - http:
+#          path: hello/world
+#          method: get
 
 #    EXAMPLE: API Gateway Protocol=http, Path=users/create, Method=get
 #    events:
