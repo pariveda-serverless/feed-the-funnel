@@ -43,16 +43,16 @@ functions:
           method: post
           cors: true
 
-#  hello:
-#    environment:
-#      SECRETS_BUCKET: ${file(./s3.txt)}
-#      SECURITY_COMMIT_HASH: ${self:custom.securityHash}
-#      APP_COMMIT_HASH: ${self:custom.appHash}
-#    handler: index.hello
-#    events:
-#      - http:
-#          path: hello/world
-#          method: get
+  hello:
+    environment:
+      SECRETS_BUCKET: ${file(./s3.txt)}
+      SECURITY_COMMIT_HASH: ${self:custom.securityHash}
+      APP_COMMIT_HASH: ${self:custom.appHash}
+    handler: index.hello
+    events:
+      - http:
+          path: hello/world
+          method: get
 
 #    EXAMPLE: API Gateway Protocol=http, Path=users/create, Method=get
 #    events:
