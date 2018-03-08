@@ -23,13 +23,15 @@ phases:
       # TODO determine if you need secret management, and modify accordingly
       - aws configure set s3.signature_version s3v4
       - echo Secrets bucket is $(cat s3.txt)
+      - aws s3api get-object --bucket $(cat s3.txt) --key oauth.enc oauth.txt
+      - aws s3api get-object --bucket $(cat s3.txt) --key token.enc token.txt
 
       # TODO: If needed, add additional steps
       # EXAMPLE: npm lint, npm test, etc.
   build:
     commands:
       # Deploy Application
-      - serverless deploy
+      - serverless deploy --clientSecret "$(cat oauth.txt)" --slackToken "$(cat token.txt)"
 
   post_build:
     commands:

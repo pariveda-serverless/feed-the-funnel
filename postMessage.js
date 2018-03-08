@@ -1,11 +1,11 @@
 var AWS = require('aws-sdk');
 var docs = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-var token = "uk4pWPlX1Q6LqelLK4b0q8QY";
+const token = process.env['VERIFICATION_TOKEN'];
 var qs = require('querystring');
 var req = require('request');
 
-const encryptedSlackAuthToken = process.env['SLACK_APP_AUTH_TOKEN'];
-let decryptedSlackAuthToken;
+//const encryptedSlackAuthToken = process.env['SLACK_APP_AUTH_TOKEN'];
+const decryptedSlackAuthToken = process.env['SLACK_APP_AUTH_TOKEN'];
 
 function getActivityDate() {
     var dateObj = new Date();
@@ -91,19 +91,19 @@ function processEvent(event, context, callback) {
 }
 
 exports.handler = (event, context, callback) => {
-    if (decryptedSlackAuthToken) {
+    //if (decryptedSlackAuthToken) {
         processEvent(event, context, callback);
-    } else {
-        // Decrypt code should run once and variables stored outside of the function
-        // handler so that these are decrypted once per container
-        const kms = new AWS.KMS();
-        kms.decrypt({ CiphertextBlob: new Buffer(encryptedSlackAuthToken, 'base64') }, (err, data) => {
-            if (err) {
-                console.log('Decrypt error:', err);
-                return callback(err);
-            }
-            decryptedSlackAuthToken = data.Plaintext.toString('ascii');
-            processEvent(event, context, callback);
-        });
-    }
+    // } else {
+    //     // Decrypt code should run once and variables stored outside of the function
+    //     // handler so that these are decrypted once per container
+    //     const kms = new AWS.KMS();
+    //     kms.decrypt({ CiphertextBlob: new Buffer(encryptedSlackAuthToken, 'base64') }, (err, data) => {
+    //         if (err) {
+    //             console.log('Decrypt error:', err);
+    //             return callback(err);
+    //         }
+    //         decryptedSlackAuthToken = data.Plaintext.toString('ascii');
+    //         processEvent(event, context, callback);
+    //     });
+    // }
 };
