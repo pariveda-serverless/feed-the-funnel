@@ -45,6 +45,20 @@ functions:
           method: post
           cors: true
 
+  getData:
+    environment:
+      SLACK_APP_AUTH_TOKEN: ${opt:clientSecret}
+      VERIFICATION_TOKEN: ${opt:slackToken}
+      SECRETS_BUCKET: ${file(./s3.txt)}
+      SECURITY_COMMIT_HASH: ${self:custom.securityHash}
+      APP_COMMIT_HASH: ${self:custom.appHash}
+    handler: getData.handler
+    events:
+      - http:
+          path: activityData
+          method: post
+          cors: true
+
   hello:
     environment:
       SECRETS_BUCKET: ${file(./s3.txt)}

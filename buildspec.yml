@@ -23,7 +23,9 @@ phases:
       # TODO determine if you need secret management, and modify accordingly
       - aws configure set s3.signature_version s3v4
       - echo Secrets bucket is $(cat s3.txt)
+      # For environment var SLACK_APP_AUTH_TOKEN in serverless.yml
       - aws s3api get-object --bucket $(cat s3.txt) --key oauth.enc oauth.txt
+      # For environment var VERIFICATION_TOKEN in serverless.yml
       - aws s3api get-object --bucket $(cat s3.txt) --key token.enc token.txt
 
       # TODO: If needed, add additional steps
@@ -31,13 +33,14 @@ phases:
   build:
     commands:
       # Deploy Application
-      - serverless deploy --clientSecret "$(cat oauth.txt)" --slackToken "$(cat token.txt)"
+      - serverless deploy --clientSecret "$(cat oauth`.txt)" --slackToken "$(cat token.txt)"
 
   post_build:
     commands:
       # Remove S3 Bucket Name from Codebuild Memory
       - rm -rf s3.txt
-
+      - rm -rf oauth.txt
+      - rm -rf token.txt
       # Remove pipelines
       # USE WITH EXTREME CAUTION!
       #- sls remove
