@@ -47,7 +47,7 @@ function processEvent(event, context, callback) {
 
     var slackValues = inputParams.text;
 
-    var fields = ['date', 'contact', 'company', 'event', 'name', 'level', 'office'];
+    const fields = ['date', 'contact', 'company', 'event', 'name', 'level', 'office'];
     var params = {
         TableName : process.env.ACTIVITIES_TABLE
     };
